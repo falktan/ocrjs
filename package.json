@@ -1,0 +1,38 @@
+{
+  "name": "ocrjs",
+  "version": "0.0.1",
+  "description": "Optical character recognitin in JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "http-server dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/falktan/ocrjs.git"
+  },
+  "keywords": [
+    "OCR",
+    "JS",
+    "JavaScript"
+  ],
+  "author": "Falk Tandetzky",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/falktan/ocrjs/issues"
+  },
+  "homepage": "https://github.com/falktan/ocrjs#readme",
+  "devDependencies": {
+    "css-loader": "^5.2.1",
+    "html-webpack-plugin": "^5.3.1",
+    "http-server": "^0.12.3",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.33.2",
+    "webpack-cli": "^4.6.0"
+  },
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "tesseract.js": "^2.1.4"
+  }
+}
