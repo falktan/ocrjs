@@ -1,5 +1,4 @@
 import $ from "jquery";
-import img from "./resources/img04.jpg";
 import tesseract from "tesseract.js";
 // This dependency is loaded dynamicall.
 // There is a node dependency that provides opencv, but this needs an
@@ -13,9 +12,22 @@ window.onload = () => {
     async function main() {
         await loadOpenCV();
         const ocrWorker = await loadTesseractWorker();
+        
+        const examples = [1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014];
+        for (const n of examples) {
+            const nWithTrailingZeros = n.toLocaleString('en-US', {minimumIntegerDigits: 5, useGrouping:false});
+            const imgPath = `/data/images/tr_img_${nWithTrailingZeros}.jpg`;
+            const groundTruthPath = `/data/ground_truth/tr_img_${nWithTrailingZeros}.txt`;
 
+            await processImg(imgPath, groundTruthPath, ocrWorker, cv);
+        }
+    }
+
+    async function processImg(imgPath, groundTruthPath, ocrWorker, cv) {
+        const imgWidth = 800;  // Images sizes vary a lot. So we use some fixed reasonable size
         const sourceImage = $("<img/>");
-        sourceImage.attr("src", img)
+        sourceImage.attr("src", imgPath);
+        sourceImage.attr("width", `${imgWidth}px`);
         sourceImage.appendTo("body");
         await sleep(500); // wait for sourceImage to be loaded and rendered
         const canvasInput = $("<canvas/>");
@@ -25,7 +37,10 @@ window.onload = () => {
 
         canvasInput.get(0).width = sourceImage.get(0).width;
         canvasInput.get(0).height = sourceImage.get(0).height;
-        canvasInput.get(0).getContext("2d").drawImage(sourceImage.get(0), 0, 0);
+        canvasInput.get(0).getContext("2d").drawImage(
+            sourceImage.get(0), 0, 0, 
+            imgWidth, imgWidth*sourceImage.get(0).height/sourceImage.get(0).width
+        );
 
         canvasOutput.get(0).width = sourceImage.get(0).width;
         canvasOutput.get(0).height = sourceImage.get(0).height;
@@ -40,6 +55,8 @@ window.onload = () => {
 
         const {data: ocrResult} = await ocrWorker.recognize(canvasInput.get(0));
         const {data: ocrResultAfterPreprocessing} = await ocrWorker.recognize(canvasOutput.get(0));
+
+        $("<br/>").appendTo("body");
 
         console.log("results without preprocessing");
         console.log(ocrResult);
